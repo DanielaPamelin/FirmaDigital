@@ -95,29 +95,5 @@ signer_info = st.text_input("Nombre del firmante")
 uploaded_document = st.file_uploader("Sube el documento a firmar", type=["txt", "pdf"], key="sign_doc")
 if st.button("Generar Firma"):
     if signer_info in private_keys and uploaded_document:
-        document = uploaded_document.read()
-        document_hash = create_hash(document + signer_info.encode('utf-8'))
-        signature = sign_data(document_hash, signer_info)
-        if signature:
-            st.success("Firma generada con éxito")
-            st.download_button(label="Descargar Firma", data=signature, file_name="firma.sign")
-    else:
-        st.error("Por favor, ingresa el nombre del firmante y sube un documento válido.")
+        document = uploaded_docume
 
-# Verificar firma digital
-st.header("Verificar Firma Digital")
-signer_info_ver = st.text_input("Nombre del firmante (verificación)")
-uploaded_document_ver = st.file_uploader("Sube el documento original", type=["txt", "pdf"], key="ver_doc")
-signature_hex = st.text_input("Firma (en hexadecimal)")
-if st.button("Verificar Firma"):
-    if signer_info_ver in public_keys and uploaded_document_ver and signature_hex:
-        document_ver = uploaded_document_ver.read()
-        document_hash_ver = create_hash(document_ver + signer_info_ver.encode('utf-8'))
-        signature_ver = bytes.fromhex(signature_hex)
-        is_valid = verify_signature(document_hash_ver, signature_ver, signer_info_ver)
-        if is_valid:
-            st.success("Firma válida")
-        else:
-            st.error("Firma no válida")
-    else:
-        st.error("Por favor, ingresa todos los campos necesarios para la verificación.")
